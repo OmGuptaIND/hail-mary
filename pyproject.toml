@@ -1,0 +1,9 @@
+[project]
+name = "hail-mary"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "kolla-ansible>=20.1.0",
+]

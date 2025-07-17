@@ -1,0 +1,3 @@
+[submodule "kolla-ansible"]
+	path = kolla-ansible
+	url = git@github.com:openstack/kolla-ansible.git
