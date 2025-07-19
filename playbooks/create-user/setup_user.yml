@@ -1,0 +1,55 @@
+---
+- name: Setup 'stack' user on servers
+  hosts: all  # Targets both servers
+  become: true  # Uses sudo for elevation
+  vars:
+    stack_username: "stack"
+    stack_public_key_file: "/workspaces/hail-mary/keys/stack/stack.pub" 
+    stack_sudo_passwordless: true
+
+  tasks:
+    - name: Create 'stack' user if not exists
+      user:
+        name: "{{ stack_username }}"
+        state: present
+        shell: /bin/bash
+        create_home: true
+        comment: "OpenStack stack user"
+
+    - name: Add 'stack' to sudo group
+      user:
+        name: "{{ stack_username }}"
+        groups: sudo
+        append: true  # Adds without removing existing groups
+
+    - name: Configure passwordless sudo for stack (optional)
+      lineinfile:
+        path: /etc/sudoers.d/{{ stack_username }}
+        line: "{{ stack_username }} ALL=(ALL) NOPASSWD: ALL"
+        create: yes
+        mode: '0440'
+        owner: root
+        group: root
+      when: stack_sudo_passwordless
+
+    - name: Create .ssh directory for 'stack'
+      file:
+        path: "/home/{{ stack_username }}/.ssh"
+        state: directory
+        owner: "{{ stack_username }}"
+        group: "{{ stack_username }}"
+        mode: '0700'
+
+    - name: Add public key to authorized_keys (loaded from file)
+      authorized_key:
+        user: "{{ stack_username }}"
+        state: present
+        key: "{{ lookup('file', stack_public_key_file) }}"  # Securely loads from file
+        path: "/home/{{ stack_username }}/.ssh/authorized_keys"
+        manage_dir: false  # Dir already created
+        exclusive: false  # Appends if multiple keys
+      no_log: true  # Hides key in logs for security
+
+    - name: Debug verification (optional, remove in prod)
+      debug:
+        msg: "User '{{ stack_username }}' setup complete. SSH key added from file."

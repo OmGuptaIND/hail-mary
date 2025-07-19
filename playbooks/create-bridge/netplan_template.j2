@@ -1,0 +1,14 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    {{ physical_interface }}:
+      dhcp4: no
+  bridges:
+    {{ bridge_name }}:
+      interfaces: [{{ physical_interface }}]
+      dhcp4: no
+      addresses: [{{ node_ip }}{{ node_subnet }}]
+      gateway4: {{ node_gateway }}
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]

@@ -1,0 +1,45 @@
+---
+- name: Setup br-ex bridge on OpenStack nodes
+  hosts: all  # Targets both server1 and server2
+  become: true  # Uses sudo
+  vars:
+    # Define per-host vars (override in inventory if needed)
+    bridge_name: "br-ex"
+    physical_interface: "eno1"
+    # IP and gateway per host (use host_vars or adjust)
+    node_ip: "{{ ansible_host }}"  # Uses ansible_host from inventory (51.68.35.44 or 51.75.52.8)
+    node_subnet: "/24"
+    node_gateway: "{{ ansible_host | regex_replace('\\.[0-9]+$', '.254') }}"  # Auto-derives .254 gateway (e.g., 51.75.52.254)
+
+  tasks:
+    - name: Install openvswitch-switch
+      apt:
+        name: openvswitch-switch
+        state: present
+        update_cache: yes
+
+    - name: Create br-ex bridge if not exists
+      command: ovs-vsctl add-br {{ bridge_name }}
+      ignore_errors: yes  # Idempotent: skips if exists
+      changed_when: false
+
+    - name: Perform bridge attachment and IP migration in one atomic step
+      shell: |
+        ovs-vsctl add-port {{ bridge_name }} {{ physical_interface }} && \
+        ip addr flush dev {{ physical_interface }} && \
+        ip addr add {{ node_ip }}{{ node_subnet }} dev {{ bridge_name }} && \
+        ip link set {{ bridge_name }} up && \
+        ip route add default via {{ node_gateway }} dev {{ bridge_name }}
+      ignore_errors: yes  # In case already done
+      changed_when: false
+
+    - name: Configure Netplan for persistence
+      template:
+        src: netplan_template.j2
+        dest: /etc/netplan/01-netcfg.yaml
+        mode: 0644
+      notify: Apply Netplan
+
+  handlers:
+    - name: Apply Netplan
+      command: netplan apply

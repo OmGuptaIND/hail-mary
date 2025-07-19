@@ -1,0 +1,163 @@
+[control]
+server1 ansible_host=51.68.35.44 ansible_user=stack ansible_ssh_private_key_file=/workspaces/hail-mary/keys/controller/stack
+
+[network]
+server1 ansible_host=51.68.35.44 ansible_user=stack ansible_ssh_private_key_file=/workspaces/hail-mary/keys/controller/stack
+
+[compute]
+server2 ansible_host=51.75.52.8 ansible_user=stack ansible_ssh_private_key_file=/workspaces/hail-mary/keys/compute/stack
+
+[monitoring]
+# Empty - monitoring disabled
+
+[storage]
+server1 ansible_host=51.68.35.44 ansible_user=stack ansible_ssh_private_key_file=/workspaces/hail-mary/keys/controller/stack
+
+[deployment]
+localhost ansible_connection=local
+
+# REQUIRED STRUCTURAL GROUPS
+[baremetal:children]
+control
+network
+compute
+storage
+
+[common:children]
+control
+network
+compute
+storage
+
+# EMPTY GROUPS (required by kolla-ansible but not used)
+[loadbalancer]
+# Empty - load balancing disabled
+
+[bifrost:children]
+deployment
+
+# REQUIRED COMMON SERVICES (Kolla infrastructure)
+[cron:children]
+common
+
+[kolla-logs:children]
+common
+
+[kolla-toolbox:children]
+common
+
+# MARIADB INSTEAD OF POSTGRES
+[mariadb:children]
+control
+
+[rabbitmq:children]
+control
+
+[memcached:children]
+control
+
+[keystone:children]
+control
+
+[glance:children]
+control
+
+[nova:children]
+control
+
+[neutron:children]
+network
+
+[openvswitch:children]
+network
+compute
+
+[horizon:children]
+control
+
+[heat:children]
+control
+
+[placement:children]
+control
+
+# SERVICE-LEVEL GROUPS (inherit from above)
+[glance-api:children]
+glance
+
+[nova-api:children]
+nova
+
+[nova-conductor:children]
+nova
+
+[nova-metadata:children]
+nova
+
+[nova-super-conductor:children]
+nova
+
+[nova-novncproxy:children]
+nova
+
+[nova-scheduler:children]
+nova
+
+[nova-spicehtml5proxy:children]
+nova
+
+[nova-compute-ironic:children]
+nova
+
+[nova-serialproxy:children]
+nova
+
+[neutron-server:children]
+control
+
+[neutron-dhcp-agent:children]
+neutron
+
+[neutron-l3-agent:children]
+neutron
+
+[neutron-metadata-agent:children]
+neutron
+
+[neutron-ovn-metadata-agent:children]
+compute
+network
+
+# Required but empty neutron agent groups
+[neutron-bgp-dragent]
+# Empty - BGP not used
+
+[neutron-infoblox-ipam-agent]
+# Empty - Infoblox not used
+
+[neutron-metering-agent]
+# Empty - Metering not used
+
+[ironic-neutron-agent]
+# Empty - Ironic not used
+
+[neutron-ovn-agent:children]
+compute
+network
+
+[heat-api:children]
+heat
+
+[heat-api-cfn:children]
+heat
+
+[heat-engine:children]
+heat
+
+[placement-api:children]
+placement
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+ansible_become=true
+ansible_become_method=sudo
