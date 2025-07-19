@@ -30,11 +30,10 @@ enable_glance: "yes"
 enable_nova: "yes"
 enable_neutron: "yes"
 enable_horizon: "yes"
-enable_heat: "yes"
 enable_placement: "yes"
-enbale_horizon: "yes"
 
 # Disable non-essential services
+enable_heat: "no"
 enable_cinder: "no"
 enable_swift: "no"
 enable_barbican: "no"

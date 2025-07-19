@@ -1,4 +1,4 @@
-.PHONY: install clean requirements create-user bootstrap ping prechecks
+.PHONY: install clean requirements create-user create-bridge bootstrap ping prechecks
 
 install:
 	@echo ">>> Installing dependencies using uv..."
@@ -8,11 +8,11 @@ install:
 # Create stack user and bridge interface
 create-user:
 	@echo ">>> Setting up stack user..."
-	@ansible-playbook -i playbooks/create-user/inventory.ini playbooks/create-user/setup_user.yml
+	@ansible-playbook -i playbooks/create-user/inventory.ini playbooks/create-user/setup_user.yml -vvv
 
 create-bridge:
 	@echo ">>> Creating bridge interface..."
-	@ansible-playbook -i playbooks/create-bridge/inventory.ini playbooks/create-bridge/setup_bridge.yml
+	@ansible-playbook -i playbooks/create-bridge/inventory.ini playbooks/create-bridge/setup_bridge.yml -vvv
 
 
 # Kolla Ansible playbook tasks
@@ -22,15 +22,15 @@ ping:
 
 bootstrap:
 	@echo ">>> Bootstrapping Kolla Ansible"
-	@kolla-ansible bootstrap-servers --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory
+	@kolla-ansible bootstrap-servers --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
 
 prechecks:
 	@echo ">>> Running prechecks"
-	@kolla-ansible prechecks --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory
+	@kolla-ansible prechecks --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
 
 deploy:
 	@echo ">>> Deploying Kolla Ansible"
-	@kolla-ansible deploy --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory -vvv
+	@kolla-ansible deploy --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
 
 ## Remove cache files
 clean: 
@@ -56,3 +56,13 @@ requirements:
 # apt-get update
 # apt-get install -y locales
 # locale-gen en_US.UTF-8
+
+# watch -n 10 'ssh -i /workspaces/hail-mary/keys/compute/stack stack@51.75.52.8 "sudo docker ps --format \"table {{.Names}}\t{{.Status}}\""'
+
+# Set proper permissions for the SSH keys
+# chmod 600 /workspaces/hail-mary/keys/controller/stack
+# chmod 600 /workspaces/hail-mary/keys/compute/stack
+
+# # If you have .pub files, set them to 644
+# chmod 644 /workspaces/hail-mary/keys/controller/stack.pub 2>/dev/null || true
+# chmod 644 /workspaces/hail-mary/keys/compute/stack.pub 2>/dev/null || true

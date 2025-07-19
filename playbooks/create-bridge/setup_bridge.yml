@@ -12,11 +12,18 @@
     node_gateway: "{{ ansible_host | regex_replace('\\.[0-9]+$', '.254') }}"  # Auto-derives .254 gateway (e.g., 51.75.52.254)
 
   tasks:
+    - name: Check if openvswitch-switch is installed
+      command: dpkg -l openvswitch-switch
+      register: ovs_check
+      failed_when: false
+      changed_when: false
+
     - name: Install openvswitch-switch
       apt:
         name: openvswitch-switch
         state: present
-        update_cache: yes
+        update_cache: no
+      when: ovs_check.rc != 0
 
     - name: Create br-ex bridge if not exists
       command: ovs-vsctl add-br {{ bridge_name }}
