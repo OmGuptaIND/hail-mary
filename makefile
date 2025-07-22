@@ -1,4 +1,4 @@
-.PHONY: install clean requirements create-user create-bridge bootstrap ping prechecks
+.PHONY: install clean requirements create-user create-bridge bootstrap ping prechecks redeploy destroy
 
 install:
 	@echo ">>> Installing dependencies using uv..."
@@ -31,6 +31,14 @@ prechecks:
 deploy:
 	@echo ">>> Deploying Kolla Ansible"
 	@kolla-ansible deploy --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
+
+redeploy:
+	@echo ">>> Re-deploying Kolla Ansible"
+	@kolla-ansible deploy --tags openvswitch --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
+
+destroy:
+	@echo ">>> Destroying Kolla Ansible deployment"
+	@kolla-ansible destroy --yes-i-really-really-mean-it --tags openvswitch --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
 
 ## Remove cache files
 clean: 
