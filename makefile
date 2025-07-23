@@ -32,6 +32,10 @@ deploy:
 	@echo ">>> Deploying Kolla Ansible"
 	@kolla-ansible deploy --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv
 
+reconfigure:
+	@echo ">>> Reconfiguring Kolla Ansible"
+	@kolla-ansible reconfigure --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini --tags nova -vvv
+
 post-deploy:
 	@echo ">>> Running post-deploy tasks"
 	@kolla-ansible post-deploy --configdir /workspaces/hail-mary/kolla-configs/etc/kolla -i /workspaces/hail-mary/kolla-configs/inventory.ini -vvv

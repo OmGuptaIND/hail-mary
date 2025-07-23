@@ -19,6 +19,9 @@ neutron_plugin_agent: "openvswitch"
 neutron_type_drivers: "vxlan,flat"  # vxlan for internal, flat for external gateway
 neutron_tenant_network_types: "vxlan"
 
+# Complete VNC disable
+nova_console: "none"
+
 # MARIADB CONFIGURATION - SINGLE NODE
 enable_mariadb: "yes"
 enable_mariadb_galera_cluster: "no"
@@ -73,8 +76,7 @@ enable_neutron_mlnx: "no"
 enable_neutron_ovn: "no"
 
 # Nova options
-nova_compute_virt_type: "qemu"
-nova_console: "novnc"
+nova_compute_virt_type: "kvm"
 
 # Glance options
 glance_backend_file: "yes"
