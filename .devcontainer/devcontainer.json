@@ -1,20 +1,25 @@
 {
-    "name": "OpenStack Kolla Dev",
-    "image": "ubuntu:24.04",
+    "name": "OpenStack Development",
+    "image": "ubuntu:22.04",
     "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/python:1": {
             "version": "3.10"
-        }
+        },
+        "ghcr.io/devcontainers/features/git:1": {}
     },
     "customizations": {
         "vscode": {
             "extensions": [
                 "ms-python.python",
-                "redhat.ansible"
+                "redhat.ansible",
+                "ms-vscode-remote.remote-ssh"
             ]
         }
     },
-    "postCreateCommand": "apt-get update && apt-get install -y git vim curl wget openssh-client && curl -LsSf https://astral.sh/uv/install.sh | sh",
-    "remoteUser": "root"
+    "postCreateCommand": "pip install ansible>=6,<8 kolla-ansible python-openstackclient",
+    "remoteUser": "root",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    ],
+    "workspaceFolder": "/workspace"
 }
