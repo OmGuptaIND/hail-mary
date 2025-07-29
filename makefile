@@ -9,11 +9,11 @@ install:
 # Create stack user and bridge interface
 create-user:
 	@echo ">>> Setting up stack user..."
-	@ansible-playbook -i /root/hail-mary/playbooks/create-user/inventory.ini /root/hail-mary/playbooks/create-user/setup_user.yml -vvv
+	@ansible-playbook -i /root/hail-mary/playbooks/create-user/inventory.ini /root/hail-mary/playbooks/create-user/setup_user.yml -vvvv
 
 create-bridge:
 	@echo ">>> Creating bridge interface..."
-	@ansible-playbook -i /root/hail-mary/playbooks/create-bridge/inventory.ini /root/hail-mary/playbooks/create-bridge/setup_bridge.yml --limit control -vvv
+	@ansible-playbook -i /root/hail-mary/playbooks/create-bridge/inventory.ini /root/hail-mary/playbooks/create-bridge/setup_bridge.yml --limit control -vvvv
 
 gen-passwords:
 	@echo ">>> Generating passwords..."
@@ -27,31 +27,31 @@ ping:
 
 bootstrap:
 	@echo ">>> Bootstrapping Kolla Ansible"
-	@kolla-ansible bootstrap-servers --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible bootstrap-servers --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 prechecks:
 	@echo ">>> Running prechecks"
-	@kolla-ansible prechecks --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible prechecks --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 deploy:
 	@echo ">>> Deploying Kolla Ansible"
-	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 reconfigure:
 	@echo ">>> Reconfiguring Kolla Ansible"
-	@kolla-ansible reconfigure --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini --tags nova -vvv
+	@kolla-ansible reconfigure --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini --tags nova -vvvv
 
 post-deploy:
 	@echo ">>> Running post-deploy tasks"
-	@kolla-ansible post-deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible post-deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 redeploy:
 	@echo ">>> Re-deploying Kolla Ansible"
-	@kolla-ansible deploy --tags openvswitch --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible deploy --tags openvswitch --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 destroy:
 	@echo ">>> Destroying Kolla Ansible deployment"
-	@kolla-ansible destroy --yes-i-really-really-mean-it --tags openvswitch --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
+	@kolla-ansible destroy --yes-i-really-really-mean-it --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 ## Remove cache files
 clean: 
