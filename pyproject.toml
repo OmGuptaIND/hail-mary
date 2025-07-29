@@ -1,14 +1,14 @@
 [project]
 name = "hail-mary"
 version = "0.1.0"
-description = "Add your description here"
+description = "OpenStack deployment with Kolla Ansible"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "autopage>=0.5.2",
-    "cliff>=4.10.0",
-    "kolla-ansible>=20.1.0",
-    "pbr>=6.1.1",
+    "ansible-core>=2.17,<2.18.99",
     "python-openstackclient>=8.1.0",
+    "pbr>=6.1.1",
     "stevedore>=5.4.1",
+    "cliff>=4.10.0",
+    "autopage>=0.5.2",
 ]
