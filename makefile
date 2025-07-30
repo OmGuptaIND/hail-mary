@@ -8,6 +8,14 @@ install:
 	@kolla-ansible install-deps
 	@echo ">>> Setup complete. Dependencies installed."
 
+ssh-control:
+	@echo ">>> SSH into control node..."
+	@ssh -i /root/hail-mary/keys/root root@10.180.220.19
+
+ssh-compute:
+	@echo ">>> SSH into compute node..."
+	@ssh -i /root/hail-mary/keys/root root@10.180.220.6
+
 # Create stack user and bridge interface
 create-user:
 	@echo ">>> Setting up stack user..."
@@ -26,6 +34,10 @@ gen-passwords:
 ping:
 	@echo ">>> Pinging Services"
 	@ansible -i playbooks/ping/inventory.ini all -m ping
+
+pull:
+	@echo ">>> Pulling Kolla Ansible images"
+	@kolla-ansible pull --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 bootstrap:
 	@echo ">>> Bootstrapping Kolla Ansible"

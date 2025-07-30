@@ -12,6 +12,9 @@ kolla_external_vip_address: "185.150.116.100"  # Unattached floating IP
 neutron_plugin_agent: "ovn"
 enable_ovn: "yes"
 enable_neutron_dvr: "no"  # MUST be "no" with OVN
+enable_ovn_bgp_agent: "yes"
+enable_frr: "yes"
+
 
 # OVN Database configuration
 ovn_nb_db_clustered: "false" 
