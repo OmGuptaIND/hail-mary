@@ -2,8 +2,10 @@
 
 install:
 	@echo ">>> Installing dependencies using uv..."
-	@uv pip install git+https://opendev.org/openstack/kolla-ansible@stable/2025.1
 	@uv pip sync pyproject.toml
+	@uv pip install git+https://opendev.org/openstack/kolla-ansible@stable/2025.1
+	@kolla-ansible --version
+	@kolla-ansible install-deps
 	@echo ">>> Setup complete. Dependencies installed."
 
 # Create stack user and bridge interface
@@ -17,7 +19,7 @@ create-bridge:
 
 gen-passwords:
 	@echo ">>> Generating passwords..."
-	@kolla-genpwd -p /root/hail-mary/kolla-configs/passwords.yml
+	@kolla-genpwd -p /root/hail-mary/kolla-configs/etc/kolla/passwords.yml
 
 
 # Kolla Ansible playbook tasks

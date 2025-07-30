@@ -11,4 +11,5 @@ dependencies = [
     "stevedore>=5.4.1",
     "cliff>=4.10.0",
     "autopage>=0.5.2",
+    "python-neutronclient>=11.6.0",
 ]
