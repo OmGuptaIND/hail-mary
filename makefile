@@ -49,7 +49,7 @@ prechecks:
 
 deploy:
 	@echo ">>> Deploying Kolla Ansible"
-	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
+	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini
 
 reconfigure:
 	@echo ">>> Reconfiguring Kolla Ansible"
@@ -101,3 +101,21 @@ requirements:
 # # If you have .pub files, set them to 644
 # chmod 644 /workspaces/hail-mary/keys/controller/stack.pub 2>/dev/null || true
 # chmod 644 /workspaces/hail-mary/keys/compute/stack.pub 2>/dev/null || true
+
+
+# Remove IP from physical interface
+# sudo ip addr del 93.115.29.63/24 dev enp1s0
+
+# # Add IP to the br-ex bridge
+# sudo ip addr add 93.115.29.63/24 dev br-ex
+# sudo ip link set br-ex up
+
+# # Remove old default route
+# sudo ip route del default via 93.115.29.1 dev enp1s0 | 93.115.29.1 is Gateway IP
+
+# # Add new default route via br-ex
+# sudo ip route add default via 93.115.29.1 dev br-ex
+
+# sudo rm -f /var/lib/docker/volumes/*/var/run/openvswitch/*.pid
+# # or if it's a bind mount:
+# sudo rm -f /var/run/openvswitch/*.pid
