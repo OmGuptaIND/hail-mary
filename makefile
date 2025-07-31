@@ -41,7 +41,7 @@ pull:
 
 bootstrap:
 	@echo ">>> Bootstrapping Kolla Ansible"
-	@kolla-ansible bootstrap-servers --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
+	@kolla-ansible bootstrap-servers --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini
 
 prechecks:
 	@echo ">>> Running prechecks"
@@ -49,11 +49,11 @@ prechecks:
 
 deploy:
 	@echo ">>> Deploying Kolla Ansible"
-	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini
+	@kolla-ansible deploy --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvv
 
 reconfigure:
 	@echo ">>> Reconfiguring Kolla Ansible"
-	@kolla-ansible reconfigure --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini --tags nova -vvvv
+	@kolla-ansible reconfigure --tags neutron --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 post-deploy:
 	@echo ">>> Running post-deploy tasks"
@@ -68,6 +68,9 @@ destroy:
 	@kolla-ansible destroy --yes-i-really-really-mean-it --configdir /root/hail-mary/kolla-configs/etc/kolla -i /root/hail-mary/kolla-configs/inventory.ini -vvvv
 
 ## Remove cache files
+parse:
+	@echo ">>> Parsing inventory..."
+	@ansible-inventory -i /root/hail-mary/kolla-configs/inventory.ini --list
 clean: 
 	@echo ">>> Cleaning cache files..."
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
